@@ -6,15 +6,15 @@ TTTApp.controller('TTTController', function ($scope) {
 
   //  Create something to store the status of the cells:
   $scope.cellList = [
-  {status: "A", clickNumber: 0},
-  {status: "B", clickNumber: 0},
-  {status: "C", clickNumber: 0},
-  {status: "D", clickNumber: 0},
-  {status: "E", clickNumber: 0},
-  {status: "F", clickNumber: 0},
-  {status: "G", clickNumber: 0},
-  {status: "H", clickNumber: 0},
-  {status: "I", clickNumber: 0}
+  {status: 0, clickNumber: 0, value: 1},
+  {status: 1, clickNumber: 0, value: 2},
+  {status: 2, clickNumber: 0, value: 4},
+  {status: 3, clickNumber: 0, value: 8},
+  {status: 4, clickNumber: 0, value: 16},
+  {status: 5, clickNumber: 0, value: 32},
+  {status: 6, clickNumber: 0, value: 64},
+  {status: 7, clickNumber: 0, value: 128},
+  {status: 8, clickNumber: 0, value: 256}
   ];
   // end of cell storage
 
@@ -51,4 +51,7 @@ TTTApp.controller('TTTController', function ($scope) {
     console.log(thisCell.clickNumber);
     }
   };
+
+  // Binary sums for win
+  $scope.wins = [7, 56, 448, 73, 146, 292, 273, 84]; 
 });
