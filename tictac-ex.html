@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+
+		<!-- AngularJS -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.23/angular.js"></script>
+
+		<title>Ya it's Angular time</title>
+
+		<style>
+			.cell {width: 150px; height: 150px; float: left; border: 2px solid red;}
+			.clearFix {clear:both;}
+		</style>
+
+		<script>
+			var app = angular.module('TicTacApp', []);
+			app.controller('TTTCtrl', ["$scope", function ($scope) {
+				$scope.board = [
+				{status:"A", pos:0}, {status:"A", pos:1}, {status:"A", pos:2},
+				{status:"A", pos:3}, {status:"A", pos:4}, {status:"A", pos:5},
+				{status:"A", pos:6}, {status:"A", pos:7}, {status:"A", pos:8}];
+
+				$scope.makeMove = function () {
+					console.log(this.mySingleCell);
+					alert(this.$index);
+				};
+			}]);
+		</script>
+	</head>
+	<body x-ng-app="TicTacApp" x-ng-controller="TTTCtrl">
+			<h2>Let's play tic tac toe!</h2>
+			<br />
+
+		<div class="cell" x-ng-repeat="mySingleCell in board"
+		 x-ng-class="{clearFix: (mySingleCell.pos % 3) == 0}"
+		 x-ng-click="makeMove()">
+			{{mySingleCell.status}}
+		</div>
+	</body>
+</html>

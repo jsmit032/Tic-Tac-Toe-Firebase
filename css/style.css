@@ -1,0 +1,50 @@
+.navbar {
+	text-align: center;
+	background-color: black;
+	border-color: #404040;
+	min-height: 100px;
+}
+
+h2 {
+	color: #7F7F7F;
+}
+
+.form-group {
+	display: -moz-inline-box;
+}
+
+h4 {
+	color: #BFBDBC;
+}
+
+.container {
+	width: 475px;
+	height: 475px;
+	display: block;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.allCellsAlways {
+	width:150px; 
+	height:150px;
+	display: inline-block;
+	float: left;
+	text-align: center;
+	margin: 0 auto; 
+	padding: 0px;
+	border-radius: 10px;
+	-moz-box-shadow: 10px 10px 5px 0px #888;
+	-webkit-box-shadow: 10px 10px 5px 0px #888;
+	box-shadow: 10px 10px 5px 0px #888;
+}
+
+.xclass {
+	background-image: url('../images/red_X.png');
+	background-size: 150px 150px;
+}
+
+.oclass {
+	background-image: url('../images/red_O.png');
+	background-size: 150px 150px;
+}
