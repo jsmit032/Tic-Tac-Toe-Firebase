@@ -9,15 +9,15 @@ TTTApp.controller('TTTController', function ($scope) {
 
   //  Create something to store the status of the cells:
   $scope.cellList = [
-  {status: 0, clickNumber: 0, value: 1},
-  {status: 1, clickNumber: 0, value: 2},
-  {status: 2, clickNumber: 0, value: 4},
-  {status: 3, clickNumber: 0, value: 8},
-  {status: 4, clickNumber: 0, value: 16},
-  {status: 5, clickNumber: 0, value: 32},
-  {status: 6, clickNumber: 0, value: 64},
-  {status: 7, clickNumber: 0, value: 128},
-  {status: 8, clickNumber: 0, value: 256}
+  {status: "null", clickNumber: 0, value: 1},
+  {status: "null", clickNumber: 0, value: 2},
+  {status: "null", clickNumber: 0, value: 4},
+  {status: "null", clickNumber: 0, value: 8},
+  {status: "null", clickNumber: 0, value: 16},
+  {status: "null", clickNumber: 0, value: 32},
+  {status: "null", clickNumber: 0, value: 64},
+  {status: "null", clickNumber: 0, value: 128},
+  {status: "null", clickNumber: 0, value: 256}
   ];
   // end of cell storage
 
@@ -25,13 +25,16 @@ TTTApp.controller('TTTController', function ($scope) {
   // from input field, limits to two players.
   // also assigns a score property to each player
   $scope.players = [];
+  var namePlaceholders = ["name of player", "player 2 name"]
+  $scope.namePlaceholder = namePlaceholders[0];
 
   $scope.addInput = function() {
-    if($scope.players.length >= 2)
-    {
-      console.log("You've reached the player limit")
+    if($scope.players.length >= 2) {
+      console.log("You've reached the player limit");
     } else {
-      $scope.players.push({name: $scope.playerName, score: 0});
+      $scope.players.push({name: $scope.playerName, score: 0, wins: 0});
+      $scope.namePlaceholder = namePlaceholders[$scope.players.length & 1];
+      $scope.playerName = "";
     }
   }; // end of add Input function
 
@@ -40,16 +43,33 @@ TTTApp.controller('TTTController', function ($scope) {
   $scope.startNewGame = function () {
     $scope.turn = "X"; // a way to change who goes first
     $scope.movecounter = 0;
-    //refresh page in here???
+    for (var i = 0; i < $scope.cellList.length; i++) {
+      $scope.cellList[i].status = "null";
+      $scope.cellList[i].clickNumber = 0;
+    }; // clear board
+    console.log("connected "); 
+    console.log("move counter: " + $scope.movecounter); 
+    console.log("status is: " + $scope.cellList.status);
   };
 
+  // can this be inherited from the start New Game???
+  $scope.restartGame = function () {
+    $scope.movecounter = 0;
+    $scope.players = [];
+    for (var i = 0; i < $scope.cellList.length; i++) {
+      $scope.cellList[i].status = "null";
+      $scope.cellList[i].clickNumber = 0;
+    }; // clear board
+  }
+
   // Binary sums for win
-  $scope.wins = [7, 56, 448, 73, 146, 292, 273, 84]; 
+  var winNums = [7, 56, 448, 73, 146, 292, 273, 84]; 
 
   // Returns whether the given score is a winning score.
+  // Need to get the score from each player
   $scope.win = function () {
-    for (var i = 0; i < $scope.wins.length; i += 1) {
-      if (($scope.wins[i] & $scope.score) == $scope.wins[i]) {
+    for (var i = 0; i < winNums.length; i += 1) {
+      if ((winNums[i] & $scope.score) == winNums[i]) {
         return true;
       } 
     }
@@ -79,8 +99,10 @@ TTTApp.controller('TTTController', function ($scope) {
     	thisCell.status = "O";
       thisCell.clickNumber = thisCell.clickNumber + 1;
     }
+    $scope.players[$scope.movecounter % 2].score += thisCell.value;
     console.log("Cell is now: " + thisCell.status);
-    console.log(thisCell.clickNumber);
+    console.log("Click Number: " + thisCell.clickNumber);
+    console.log("name: " + $scope.players[$scope.movecounter % 2].name + "Score: " + $scope.players[$scope.movecounter % 2].score);
     }
   };
 

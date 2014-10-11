@@ -16,8 +16,8 @@
 
         <div class="col-md-4">
             <h2>Let's Play Tic Tac Toe!</h2>
-            	<div class="form-group" x-ng-hide="playerlimit">
-	                <input type="text" class="form-control" placeholder="name of player" ng-model="playerName">
+            	<div class="form-group" x-ng-hide="players.length > 1">
+	                <input type="text" class="form-control" placeholder="{{namePlaceholder}}" ng-model="playerName" required>
 	                <button type="submit" class="btn btn-default" ng-click="addInput()">Submit</button>
 	            </div>
 	      </div>
@@ -35,6 +35,9 @@
 		</div>
 		CLICK COUNTER: {{movecounter}}
 	</div>
+
+	<button type="submit" class="btn btn-default" ng-click="startNewGame()">New Game</button>
+	<button type="submit" class="btn btn-default" ng-click="restartGame()">Restart</button>
 	
 	<br>
 	{{testString}}
