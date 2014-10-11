@@ -47,9 +47,13 @@ TTTApp.controller('TTTController', function ($scope) {
       $scope.cellList[i].status = "null";
       $scope.cellList[i].clickNumber = 0;
     }; // clear board
+    for (var i = 0; i < $scope.players.length; i++) {
+      $scope.players[i].score = 0;
+    } // Testing to console
     console.log("connected "); 
     console.log("move counter: " + $scope.movecounter); 
     console.log("status is: " + $scope.cellList.status);
+    console.log("score is: " + $scope.players.score);
   };
 
   // can this be inherited from the start New Game???
@@ -68,12 +72,20 @@ TTTApp.controller('TTTController', function ($scope) {
   // Returns whether the given score is a winning score.
   // Need to get the score from each player
   $scope.win = function () {
+    console.log("connected");
+    for (var i = 0; i < $scope.players.length; i++) {
+      var playerScore = $scope.players[i].score;
+      return playerScore;
+    };
     for (var i = 0; i < winNums.length; i += 1) {
-      if ((winNums[i] & $scope.score) == winNums[i]) {
+      return winNums[i];
+
+      if ((winNums[i] & playerScore) == winNums[i]) {
         return true;
-      } 
-    }
-    return false;
+      } else {
+        return false;
+      }
+    };
   };
 
   $scope.movecounter = 0;
@@ -92,6 +104,7 @@ TTTApp.controller('TTTController', function ($scope) {
     } else {
   	$scope.movecounter = $scope.movecounter + 1;
     console.log('Cell was: ' + thisCell.status);
+
     if (($scope.movecounter % 2) == 1) {
     	thisCell.status = "X";
       thisCell.clickNumber = thisCell.clickNumber + 1;
@@ -100,6 +113,8 @@ TTTApp.controller('TTTController', function ($scope) {
       thisCell.clickNumber = thisCell.clickNumber + 1;
     }
     $scope.players[$scope.movecounter % 2].score += thisCell.value;
+
+    //Testing to console
     console.log("Cell is now: " + thisCell.status);
     console.log("Click Number: " + thisCell.clickNumber);
     console.log("name: " + $scope.players[$scope.movecounter % 2].name + "Score: " + $scope.players[$scope.movecounter % 2].score);
