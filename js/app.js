@@ -1,6 +1,7 @@
 var TTTApp = angular.module('TTTApp', []);
 
-var scopeThing;
+var scopeThing,
+    turn; //tracks whose turn it is;
 
 TTTApp.controller('TTTController', function ($scope) {
   scopeThing = $scope;
@@ -70,23 +71,14 @@ TTTApp.controller('TTTController', function ($scope) {
   var winNums = [7, 56, 448, 73, 146, 292, 273, 84]; 
 
   // Returns whether the given score is a winning score.
-  // Need to get the score from each player
-  $scope.win = function () {
-    console.log("connected");
-    for (var i = 0; i < $scope.players.length; i++) {
-      var playerScore = $scope.players[i].score;
-      return playerScore;
-    };
+  $scope.win = function (score) {
     for (var i = 0; i < winNums.length; i += 1) {
-      return winNums[i];
-
-      if ((winNums[i] & playerScore) == winNums[i]) {
-        return true;
-      } else {
-        return false;
-      }
-    };
-  };
+        if ((winNums[i] & score) === winNums[i]) {
+            return true;
+        }
+    }
+    return false;
+},
 
   $scope.movecounter = 0;
 
@@ -99,26 +91,39 @@ TTTApp.controller('TTTController', function ($scope) {
   // won't allow a cell to change if clicked on more than once
 
   $scope.playerPicks = function(thisCell) {
-    if (thisCell.clickNumber == 1) {
-      return;
-    } else {
-  	$scope.movecounter = $scope.movecounter + 1;
-    console.log('Cell was: ' + thisCell.status);
+    var turn = $scope.players[$scope.movecounter % 2];
 
-    if (($scope.movecounter % 2) == 1) {
-    	thisCell.status = "X";
-      thisCell.clickNumber = thisCell.clickNumber + 1;
-    } else {
-    	thisCell.status = "O";
-      thisCell.clickNumber = thisCell.clickNumber + 1;
-    }
-    $scope.players[$scope.movecounter % 2].score += thisCell.value;
+    if (thisCell.clickNumber == 1) {return;} //makes cells only clickable once
 
-    //Testing to console
-    console.log("Cell is now: " + thisCell.status);
-    console.log("Click Number: " + thisCell.clickNumber);
-    console.log("name: " + $scope.players[$scope.movecounter % 2].name + "Score: " + $scope.players[$scope.movecounter % 2].score);
-    }
+    else { //If cell not clicked, runs else statement
+  	 $scope.movecounter = $scope.movecounter + 1; //tracks moves to determine turn
+      console.log('Cell was: ' + thisCell.status);
+
+      if (($scope.movecounter % 2) == 1) {
+      	thisCell.status = "X";
+        thisCell.clickNumber = thisCell.clickNumber + 1;
+        turn.score += thisCell.value;
+        alert("turn: " + turn.name);
+
+        if ($scope.win(turn.score)) {
+          alert(turn.name + " wins!");
+        }
+      } else {
+      	thisCell.status = "O";
+        thisCell.clickNumber = thisCell.clickNumber + 1;
+        turn.score += thisCell.value;
+        alert("turn: " + turn.name);
+
+        if ($scope.win(turn.score)) {
+          alert(turn.name + "wins!");
+        }
+      }
+
+      //Testing to console, upon clicks to cells
+      console.log("Cell is now: " + thisCell.status);
+      console.log("Click Number: " + thisCell.clickNumber);
+      console.log("name: " + turn.name + "Score: " + turn.score);
+      }
   };
 
 }); //end of TTTApp module
