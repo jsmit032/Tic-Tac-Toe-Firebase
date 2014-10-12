@@ -1,7 +1,6 @@
 var TTTApp = angular.module('TTTApp', []);
 
-var scopeThing,
-    turn; //tracks whose turn it is;
+var scopeThing;
 
 TTTApp.controller('TTTController', function ($scope) {
   scopeThing = $scope;
@@ -38,10 +37,15 @@ TTTApp.controller('TTTController', function ($scope) {
     }
   }; // end of add Input function
 
+  // randomizes who goes first
+  var firstMove = Math.floor(Math.random() * 2);
+  $scope.firstMove = ($scope.firstMove == 0 ? "X" : "O");
+
   // Clears the score and move count, 
   // erases the board, and makes it X's turn
   $scope.startNewGame = function () {
-    $scope.turn = "X"; // a way to change who goes first???
+    $scope.turn = $scope.firstMove;
+    console.log("first move is: " + firstMove);
     $scope.movecounter = 0;
     for (var i = 0; i < $scope.cellList.length; i++) {
       $scope.cellList[i].status = "null";
@@ -93,6 +97,7 @@ TTTApp.controller('TTTController', function ($scope) {
 
   $scope.playerPicks = function(thisCell) {
     var turn = $scope.players[$scope.movecounter % 2];
+    var start = (thisCell.status = $scope.firstMove);
 
     if (thisCell.clickNumber == 1) {return;} //makes cells only clickable once
 
@@ -130,6 +135,7 @@ TTTApp.controller('TTTController', function ($scope) {
       console.log("Cell is now: " + thisCell.status);
       console.log("Click Number: " + thisCell.clickNumber);
       console.log("name: " + turn.name + "Score: " + turn.score);
+      console.log("start: " + start);
       }
   };
 
