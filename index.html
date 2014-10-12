@@ -12,7 +12,10 @@
 
 <body ng-app="TTTApp" ng-controller="TTTController">
     <div class="row navbar">
-        <div class="col-md-4"><h4>{{players[0].name}}</h4></div>
+        <div class="col-md-4">
+        	<h3>{{players[0].name}}</h3>
+        	<h3>{{players[0].wins}}</h3>
+        </div>
 
         <div class="col-md-4">
             <h2>Let's Play Tic Tac Toe!</h2>
@@ -22,7 +25,10 @@
 	            </div>
 	      </div>
 
-	      <div class="col-md-4"><h4>{{players[1].name}}</h4></div>
+	      <div class="col-md-4">
+	      	<h3>{{players[1].name}}</h3>
+	      	<h3>{{players[1].wins}}</h3>
+	      </div>
     </div> <!--End navbar!-->
 
 	<div>
@@ -38,7 +44,6 @@
 
 	<button type="submit" class="btn btn-default" ng-click="startNewGame()">New Game</button>
 	<button type="submit" class="btn btn-default" ng-click="restartGame()">Restart</button>
-	<button ng-click="win()">TEST</button>
 	<br>
 	{{testString}}
 	<p></p>
