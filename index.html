@@ -20,6 +20,7 @@
         <div class="col-md-4">
             <h2>Let's Play Tic Tac Toe!</h2>
             	<div class="form-group" x-ng-hide="players.length > 1">
+            		<p class="error">{{playerError}}</p>
 	                <input type="text" class="form-control" placeholder="{{namePlaceholder}}" ng-model="playerName" required>
 	                <button type="submit" class="btn btn-default" ng-click="addInput()">Submit</button>
 	            </div>
@@ -31,21 +32,27 @@
 	      </div>
     </div> <!--End navbar!-->
 
-	<div>
-		<div class="container">
-			<div ng-repeat="oneCell in cellList">
-
-				<div class="allCellsAlways" ng-click="playerPicks(oneCell)" ng-class="{xclass: oneCell.status == 'X', oclass: oneCell.status == 'O'}">
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<div class="btn container">
+				<div ng-repeat="oneCell in cellList">
+					<div class="allCellsAlways" ng-click="playerPicks(oneCell)" ng-class="{xclass: oneCell.status == 'X', oclass: oneCell.status == 'O'}"></div>
 				</div>
 			</div>
 		</div>
-		CLICK COUNTER: {{movecounter}}
+		<div class="col-md-4"></div>
 	</div>
-
-	<button type="submit" class="btn btn-default" ng-click="startNewGame()">New Game</button>
-	<button type="submit" class="btn btn-default" ng-click="restartGame()">Restart</button>
-	<br>
-	{{testString}}
-	<p></p>
+	
+	<div class="row">
+		<div class="col-md-4">CLICK COUNTER: {{movecounter}}</div>
+		<div class="col-md-4">
+			<div class="btn-container">
+				<button type="submit" class="btn btn-default btn-lg" ng-click="startNewGame()">New Game</button>
+				<button type="submit" class="btn btn-default btn-lg" ng-click="restartGame()">Restart</button>
+			</div>
+		</div>
+		<div class="col-md-4">{{testString}}</div>
+	</div>
 </body>
 </html>

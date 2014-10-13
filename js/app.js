@@ -6,6 +6,7 @@ TTTApp.controller('TTTController', function ($scope) {
   scopeThing = $scope;
 
   $scope.testString = "Angular source, App, and Controller present" ;
+  $scope.playerError = "name of two players is required!";
 
   //  Create something to store the status of the cells:
   $scope.cellList = [
@@ -96,46 +97,49 @@ TTTApp.controller('TTTController', function ($scope) {
   // won't allow a cell to change if clicked on more than once
 
   $scope.playerPicks = function(thisCell) {
-    var turn = $scope.players[$scope.movecounter % 2];
-    var start = (thisCell.status = $scope.firstMove);
+    if ($scope.players < 2) {$scope.playerError; return;}
+    
+    else { 
+      var turn = $scope.players[$scope.movecounter % 2];
 
-    if (thisCell.clickNumber == 1) {return;} //makes cells only clickable once
+      if (thisCell.clickNumber == 1) {return;} //makes cells only clickable once
 
-    else { //If cell not clicked, runs else statement
-  	 $scope.movecounter++; //tracks moves to determine turn
-      console.log('Cell was: ' + thisCell.status);
+      else { //If cell not clicked, runs else statement
+    	 $scope.movecounter++; //tracks moves to determine turn
+        console.log('Cell was: ' + thisCell.status);
 
-      if (($scope.movecounter % 2) == 1) {
-      	thisCell.status = "X";
-        thisCell.clickNumber++;
-        turn.score += thisCell.value;
-        alert("turn: " + turn.name);
+        if (($scope.movecounter % 2) == 1) {
+        	thisCell.status = "X";
+          thisCell.clickNumber++;
+          turn.score += thisCell.value;
+          alert("turn: " + turn.name);
 
-        if ($scope.win(turn.score)) {
-          turn.wins++;
-          alert(turn.name + " wins!\nwins: " + turn.wins);
-        } else if ($scope.movecounter == 9) {
-          alert("Cat Game!");
+          if ($scope.win(turn.score)) {
+            turn.wins++;
+            alert(turn.name + " wins!\nwins: " + turn.wins);
+          } else if ($scope.movecounter == 9) {
+            alert("Cat Game!");
+          }
+        } else {
+        	thisCell.status = "O";
+          thisCell.clickNumber++;
+          turn.score += thisCell.value;
+          alert("turn: " + turn.name);
+
+          if ($scope.win(turn.score)) {
+            turn.wins++;
+            alert(turn.name + " wins!\nwins: " + turn.wins);
+          } else if ($scope.movecounter == 9) {
+            alert("Cat Game!");
+          }
         }
-      } else {
-      	thisCell.status = "O";
-        thisCell.clickNumber++;
-        turn.score += thisCell.value;
-        alert("turn: " + turn.name);
 
-        if ($scope.win(turn.score)) {
-          turn.wins++;
-          alert(turn.name + " wins!\nwins: " + turn.wins);
-        } else if ($scope.movecounter == 9) {
-          alert("Cat Game!");
+        //Testing to console, upon clicks to cells
+        console.log("Cell is now: " + thisCell.status);
+        console.log("Click Number: " + thisCell.clickNumber);
+        console.log("name: " + turn.name + "Score: " + turn.score);
+        //console.log("start: " + start);
         }
-      }
-
-      //Testing to console, upon clicks to cells
-      console.log("Cell is now: " + thisCell.status);
-      console.log("Click Number: " + thisCell.clickNumber);
-      console.log("name: " + turn.name + "Score: " + turn.score);
-      console.log("start: " + start);
       }
   };
 

@@ -9,6 +9,10 @@ h2 {
 	color: #7F7F7F;
 }
 
+.error {
+	color: red;
+}
+
 .form-group {
 	display: -moz-inline-box;
 }
@@ -47,4 +51,15 @@ h3 {
 .oclass {
 	background-image: url('../images/red_O.png');
 	background-size: 150px 150px;
+}
+
+.btn-container {
+	width: 220px;
+	height: 50px;
+	margin: 0 auto;
+	padding: 0;
+}
+
+.btn-lg {
+	margin: 0 auto;
 }
