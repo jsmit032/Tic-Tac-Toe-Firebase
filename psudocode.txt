@@ -1,0 +1,5 @@
+***RANDOM SWITCHING PLAYER WHO STARTS GAME***
+var firstMove = Math.floor(Math.random() * 2);
+$scope.firstMove = ($scope.firstMove == 0 ? "X" : "O");
+
+IF thisCell.status == “X” FOR turn.name == players[0].name THEN set thisCell.status == “O” for turn.name == players[1].name ELSE thisCell.status = “O”. 

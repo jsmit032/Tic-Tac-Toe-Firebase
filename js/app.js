@@ -45,13 +45,13 @@ TTTApp.controller('TTTController', function ($scope) {
   // Clears the score and move count, 
   // erases the board, and makes it X's turn
   $scope.startNewGame = function () {
-    $scope.turn = $scope.firstMove;
-    console.log("first move is: " + firstMove);
+    // $scope.turn = $scope.firstMove;
+    // console.log("first move is: " + firstMove);
     $scope.movecounter = 0;
-    for (var i = 0; i < $scope.cellList.length; i++) {
+     for (var i = 0; i < $scope.cellList.length; i++) {
       $scope.cellList[i].status = "null";
       $scope.cellList[i].clickNumber = 0;
-    }; // clear board
+      }; // clear board
     for (var i = 0; i < $scope.players.length; i++) {
       $scope.players[i].score = 0;
     }
@@ -78,8 +78,8 @@ TTTApp.controller('TTTController', function ($scope) {
 
   // Returns whether the given score is a winning score.
   $scope.win = function (score) {
-    for (var i = 0; i < winNums.length; i += 1) {
-        if ((winNums[i] & score) === winNums[i]) {
+    for (var i = 0; i < winNums.length; i++) {
+        if ((winNums[i] & score) == winNums[i]) {
             return true;
         }
     }
