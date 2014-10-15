@@ -1,9 +1,11 @@
 var TTTApp = angular.module('TTTApp', []);
 
-var scopeThing;
+var scopeThing,
+    gameInProgress = true;
 
 TTTApp.controller('TTTController', function ($scope) {
   scopeThing = $scope;
+  gameInProgress = $scope;
 
   $scope.testString = "Angular source, App, and Controller present" ;
 
@@ -92,7 +94,16 @@ TTTApp.controller('TTTController', function ($scope) {
         }
     }
     return false;
-},
+  },
+
+  // Stops game by making all clickNumbers = 1, however
+  // error message displays to player as asking to click another
+  // square instead of game over.
+  $scope.stopGame = function() {
+    for (var i = 0; i < $scope.cellList.length; i++) {
+    $scope.cellList[i].clickNumber = 1;
+    };
+  };
 
   $scope.movecounter = 0;
 
@@ -132,7 +143,7 @@ TTTApp.controller('TTTController', function ($scope) {
           if ($scope.win(turn.score)) {
             turn.wins++;
             alert(turn.name + " wins!\nwins: " + turn.wins);
-          } else if ($scope.movecounter == 9) {
+            } else if ($scope.movecounter == 9) {
             alert("Cat Game!");
           }
 
@@ -143,6 +154,6 @@ TTTApp.controller('TTTController', function ($scope) {
           //console.log("start: " + start);
         }
       }
-  };
+  }; // end of playerPicks()
 
 }); //end of TTTApp module
