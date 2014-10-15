@@ -5,22 +5,26 @@ var scopeThing,
 
 TTTApp.controller('TTTController', function ($scope) {
   scopeThing = $scope;
-  gameInProgress = $scope;
 
   $scope.testString = "Angular source, App, and Controller present" ;
 
   //List of user errors
   $scope.errorMessages = [
-  {
-    name: 'Too Few Players',
-    message: 'Name of two players is required!',
-    occurred: false
-  },
-  {
-    name: 'Already Clicked!',
-    message: 'Please selected another square!',
-    occurred: false
-  }
+      {
+        name: 'Too Few Players',
+        message: 'Name of two players is required!',
+        occurred: false
+      },
+      {
+          name: 'Already Clicked!',
+          message: 'Please selected another square!',
+          occurred: false
+      },
+      {
+          name: 'Game Over',
+          message: 'Game Over! Please start a new game.',
+          occurred: false
+      }
   ]; //end of user error messages
 
   //  Create something to store the status of the cells:
@@ -40,7 +44,7 @@ TTTApp.controller('TTTController', function ($scope) {
   // from input field, limits to two players.
   // also assigns a score property to each player
   $scope.players = [];
-  var namePlaceholders = ["name of player", "player 2 name"]
+  var namePlaceholders = ["name of player", "player 2 name"];
   $scope.namePlaceholder = namePlaceholders[0];
 
   $scope.addInput = function() {
@@ -61,7 +65,7 @@ TTTApp.controller('TTTController', function ($scope) {
      for (var i = 0; i < $scope.cellList.length; i++) {
       $scope.cellList[i].status = "null";
       $scope.cellList[i].clickNumber = 0;
-      }; // clear board
+      } // clear board
     for (var i = 0; i < $scope.players.length; i++) {
       $scope.players[i].score = 0;
     }
@@ -80,8 +84,8 @@ TTTApp.controller('TTTController', function ($scope) {
     for (var i = 0; i < $scope.cellList.length; i++) {
       $scope.cellList[i].status = "null";
       $scope.cellList[i].clickNumber = 0;
-    }; // clear board
-  }
+    } // clear board
+  };
 
   // Binary sums for win
   var winNums = [7, 56, 448, 73, 146, 292, 273, 84]; 
@@ -94,7 +98,7 @@ TTTApp.controller('TTTController', function ($scope) {
         }
     }
     return false;
-  },
+  };
 
   // Stops game by making all clickNumbers = 1, however
   // error message displays to player as asking to click another
@@ -102,14 +106,20 @@ TTTApp.controller('TTTController', function ($scope) {
   $scope.stopGame = function() {
     for (var i = 0; i < $scope.cellList.length; i++) {
     $scope.cellList[i].clickNumber = 1;
-    };
+    }
   };
 
   $scope.movecounter = 0;
 
   $scope.testJS = function() {
     console.log('Correctly accessing JS function.') ;
-  } ;
+  };
+
+    $scope.gameOver = function() {
+        if (gameInProgress == false) {
+            $scope.errorMessages[2].occurred = true;
+        }
+    };
 
   // function that enables player to pick a square that turn
   // cell to X or O based on the movecounter
@@ -118,33 +128,36 @@ TTTApp.controller('TTTController', function ($scope) {
   $scope.playerPicks = function(thisCell) {
     if ($scope.players.length != 2) {
       $scope.errorMessages[0].occurred = true;
-      return;
     } else { 
       var turn = $scope.players[$scope.movecounter % 2];
 
       if (thisCell.clickNumber == 1) {
         $scope.errorMessages[1].occurred = true;
+      } else if (thisCell.clickNumber == 0 && gameInProgress == false) {
+          //  keeps an ended game from allowing players to click on cells
       } else { //If cell not already clicked, runs else statement
           $scope.movecounter++; //tracks moves to determine turn
           console.log('Cell was: ' + thisCell.status);
 
           thisCell.clickNumber++;
           if (($scope.movecounter % 2) == 1) {
-          	thisCell.status = "X";
-            $scope.errorMessages[1].occurred = false;
+              thisCell.status = "X";
+              $scope.errorMessages[1].occurred = false;
           } else {
-          	thisCell.status = "O";
-            $scope.errorMessages[1].occurred = false;
+              thisCell.status = "O";
+              $scope.errorMessages[1].occurred = false;
           }
 
           turn.score += thisCell.value;
           alert("turn: " + turn.name);
 
           if ($scope.win(turn.score)) {
-            turn.wins++;
-            alert(turn.name + " wins!\nwins: " + turn.wins);
-            } else if ($scope.movecounter == 9) {
-            alert("Cat Game!");
+              turn.wins++;
+              gameInProgress = false;
+              $scope.gameOver();
+              alert(turn.name + " wins!\nwins: " + turn.wins);
+          } else if ($scope.movecounter == 9) {
+              alert("Cat Game!");
           }
 
           //Testing to console, upon clicks to cells
