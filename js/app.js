@@ -163,6 +163,7 @@ TTTApp.controller('TTTController', function ($scope) {
               alert(turn.name + " wins!\nwins: " + turn.wins);
           } else if ($scope.movecounter == 9) {
               alert("Cat Game!");
+              gameInProgress = false;
               $scope.gameOver();
           }
 
