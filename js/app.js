@@ -61,30 +61,35 @@ TTTApp.controller('TTTController', function ($scope) {
   // Clears the score and move count, 
   // erases the board, and makes it X's turn
   $scope.startNewGame = function () {
-    $scope.movecounter = 0;
-     for (var i = 0; i < $scope.cellList.length; i++) {
-      $scope.cellList[i].status = "null";
-      $scope.cellList[i].clickNumber = 0;
+      $scope.movecounter = 0;
+      gameInProgress = true;
+      $scope.errorMessages[2].occurred = false;
+      for (var i = 0; i < $scope.cellList.length; i++) {
+          $scope.cellList[i].status = "null";
+          $scope.cellList[i].clickNumber = 0;
       } // clear board
-    for (var i = 0; i < $scope.players.length; i++) {
-      $scope.players[i].score = 0;
-    }
+      for (var i = 0; i < $scope.players.length; i++) {
+          $scope.players[i].score = 0;
+      }
 
      // Testing to console
-    console.log("connected "); 
-    console.log("move counter: " + $scope.movecounter); 
-    console.log("status is: " + $scope.cellList.status);
-    console.log("score is: " + $scope.players.score);
+      console.log("connected ");
+      console.log("move counter: " + $scope.movecounter);
+      console.log("status is: " + $scope.cellList.status);
+      console.log("score is: " + $scope.players.score);
+      console.log("Game in Progress? " + gameInProgress);
   };
 
   // can this be inherited from the start New Game???
   $scope.restartGame = function () {
-    $scope.movecounter = 0;
-    $scope.players = [];
-    for (var i = 0; i < $scope.cellList.length; i++) {
-      $scope.cellList[i].status = "null";
-      $scope.cellList[i].clickNumber = 0;
-    } // clear board
+      gameInProgress = true;
+      $scope.errorMessages[2].occurred = false;
+      $scope.movecounter = 0;
+      $scope.players = [];
+      for (var i = 0; i < $scope.cellList.length; i++) {
+          $scope.cellList[i].status = "null";
+          $scope.cellList[i].clickNumber = 0;
+      } // clear board
   };
 
   // Binary sums for win
@@ -158,13 +163,14 @@ TTTApp.controller('TTTController', function ($scope) {
               alert(turn.name + " wins!\nwins: " + turn.wins);
           } else if ($scope.movecounter == 9) {
               alert("Cat Game!");
+              $scope.gameOver();
           }
 
           //Testing to console, upon clicks to cells
           console.log("Cell is now: " + thisCell.status);
           console.log("Click Number: " + thisCell.clickNumber);
           console.log("name: " + turn.name + "Score: " + turn.score);
-          //console.log("start: " + start);
+          console.log("Game in Progress? " + gameInProgress);
         }
       }
   }; // end of playerPicks()
