@@ -11,6 +11,7 @@ h2 {
 
 .error {
 	color: red;
+	z-index: 1;
 }
 
 .form-group {
