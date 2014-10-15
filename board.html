@@ -1,0 +1,5 @@
+<div class="btn container">
+	<div ng-repeat="oneCell in cellList">
+		<div class="allCellsAlways" ng-click="playerPicks(oneCell)" ng-class="{xclass: oneCell.status == 'X', oclass: oneCell.status == 'O'}"></div>
+	</div>
+</div>

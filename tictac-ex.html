@@ -14,28 +14,39 @@
 		</style>
 
 		<script>
-			var app = angular.module('TicTacApp', []);
-			app.controller('TTTCtrl', ["$scope", function ($scope) {
-				$scope.board = [
-				{status:"A", pos:0}, {status:"A", pos:1}, {status:"A", pos:2},
-				{status:"A", pos:3}, {status:"A", pos:4}, {status:"A", pos:5},
-				{status:"A", pos:6}, {status:"A", pos:7}, {status:"A", pos:8}];
+		var myhttp;
+		var app = angular.module('TicTacApp', []);
 
-				$scope.makeMove = function () {
-					console.log(this.mySingleCell);
-					alert(this.$index);
-				};
-			}]);
+		app.controller('TTTCtrl', ["$scope", "$http", function ($scope, $http) {
+			var promise = $http.get("https://api.github.com/repos/lorint/AndrewIG/issues");
+			promise.success(function(data){
+				$scope.issues = data;
+			});
+
+			$scope.board = [
+			{status:"A", pos:0}, {status:"A", pos:1}, {status:"A", pos:2},
+			{status:"A", pos:3}, {status:"A", pos:4}, {status:"A", pos:5},
+			{status:"A", pos:6}, {status:"A", pos:7}, {status:"A", pos:8}];
+
+			$scope.makeMove = function () {
+				console.log(this.mySingleCell);
+				alert(this.$index);
+			};
+		}]);
 		</script>
 	</head>
 	<body x-ng-app="TicTacApp" x-ng-controller="TTTCtrl">
-			<h2>Let's play tic tac toe!</h2>
-			<br />
+		<h2>Let's play tic tac toe!</h2>
+		<br />
 
 		<div class="cell" x-ng-repeat="mySingleCell in board"
 		 x-ng-class="{clearFix: (mySingleCell.pos % 3) == 0}"
 		 x-ng-click="makeMove()">
 			{{mySingleCell.status}}
 		</div>
+
+	 	<ul>
+	 		<li x-ng-repeat="i in issues">{{i.title}}</li>
+	 	</ul>
 	</body>
 </html>
