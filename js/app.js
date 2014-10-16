@@ -1,9 +1,12 @@
-var TTTApp = angular.module('TTTApp', []);
+var TTTApp = angular.module('TTTApp', ['firebase']);
 
 var scopeThing,
-    gameInProgress = true;
+    gameInProgress = true,
+    players = [],
+    namePlaceholders = ["name of player", "player 2 name"];
 
-TTTApp.controller('TTTController', function ($scope) {
+TTTApp.controller('TTTController', function ($scope, $firebase) {
+  var chatRef = new Firebase("https://jen-tic-tac-toe.firebaseio.com") ;
   scopeThing = $scope;
 
   $scope.testString = "Angular source, App, and Controller present" ;
@@ -43,17 +46,16 @@ TTTApp.controller('TTTController', function ($scope) {
   // array of player and function to insert player's name
   // from input field, limits to two players.
   // also assigns a score property to each player
-  $scope.players = [];
-  var namePlaceholders = ["name of player", "player 2 name"];
-  $scope.namePlaceholder = namePlaceholders[0];
+  players = [];
+  namePlaceholder = namePlaceholders[0];
 
   $scope.addInput = function() {
-    if($scope.players.length >= 2) {
+    if(players.length >= 2) {
       console.log("You've reached the player limit");
       $scope.errorMessages[0].occurred = false;
     } else {
-      $scope.players.push({name: $scope.playerName, score: 0, wins: 0});
-      $scope.namePlaceholder = namePlaceholders[$scope.players.length & 1];
+      players.push({name: $scope.playerName, score: 0, wins: 0});
+      namePlaceholder = namePlaceholders[players.length & 1];
       $scope.playerName = "";
     }
   }; // end of add Input function
@@ -68,15 +70,15 @@ TTTApp.controller('TTTController', function ($scope) {
           $scope.cellList[i].status = "null";
           $scope.cellList[i].clickNumber = 0;
       } // clear board
-      for (var i = 0; i < $scope.players.length; i++) {
-          $scope.players[i].score = 0;
+      for (var i = 0; i < players.length; i++) {
+          players[i].score = 0;
       }
 
      // Testing to console
       console.log("connected ");
       console.log("move counter: " + $scope.movecounter);
       console.log("status is: " + $scope.cellList.status);
-      console.log("score is: " + $scope.players.score);
+      console.log("score is: " + players.score);
       console.log("Game in Progress? " + gameInProgress);
   };
 
@@ -85,7 +87,7 @@ TTTApp.controller('TTTController', function ($scope) {
       gameInProgress = true;
       $scope.errorMessages[2].occurred = false;
       $scope.movecounter = 0;
-      $scope.players = [];
+      players = [];
       for (var i = 0; i < $scope.cellList.length; i++) {
           $scope.cellList[i].status = "null";
           $scope.cellList[i].clickNumber = 0;
@@ -105,24 +107,19 @@ TTTApp.controller('TTTController', function ($scope) {
     return false;
   };
 
-  // Stops game by making all clickNumbers = 1, however
-  // error message displays to player as asking to click another
-  // square instead of game over.
-  $scope.stopGame = function() {
-    for (var i = 0; i < $scope.cellList.length; i++) {
-    $scope.cellList[i].clickNumber = 1;
-    }
-  };
-
   $scope.movecounter = 0;
 
   $scope.testJS = function() {
     console.log('Correctly accessing JS function.') ;
   };
 
+    // Stops game by making all clickNumbers = 1, however
+    // error message displays to player as asking to click another
+    // square instead of game over.
     $scope.gameOver = function() {
         if (gameInProgress == false) {
             $scope.errorMessages[2].occurred = true;
+            $scope.errorMessages[1].occurred = false;
         }
     };
 
@@ -131,12 +128,12 @@ TTTApp.controller('TTTController', function ($scope) {
   // won't allow a cell to change if clicked on more than once
 
   $scope.playerPicks = function(thisCell) {
-    if ($scope.players.length != 2) {
+    if (players.length != 2) {
       $scope.errorMessages[0].occurred = true;
     } else { 
-      var turn = $scope.players[$scope.movecounter % 2];
+      var turn = players[$scope.movecounter % 2];
 
-      if (thisCell.clickNumber == 1) {
+      if ( thisCell.clickNumber == 1 ) {
         $scope.errorMessages[1].occurred = true;
       } else if (thisCell.clickNumber == 0 && gameInProgress == false) {
           //  keeps an ended game from allowing players to click on cells
@@ -172,6 +169,7 @@ TTTApp.controller('TTTController', function ($scope) {
           console.log("Click Number: " + thisCell.clickNumber);
           console.log("name: " + turn.name + "Score: " + turn.score);
           console.log("Game in Progress? " + gameInProgress);
+          console.log($scope.errorMessages[1].name + " is " + $scope.errorMessages[1].occurred);
         }
       }
   }; // end of playerPicks()
