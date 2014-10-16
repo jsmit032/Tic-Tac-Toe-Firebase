@@ -17,59 +17,56 @@
 
 <body ng-controller="TTTController">
 
-    <div class="row navbar">
-        <div class="col-md-4">
-            <!--No longer working after firebase-->
-        	<h3>{{players[0].name}}</h3>
-        	<h3>{{players[0].wins}}</h3>
+<div class="row navbar">
+    <div class="col-md-4">
+        <h3>{{players[0].name}}</h3>
+        <h3>{{players[0].wins}}</h3>
+    </div>
+
+    <div class="col-md-4">
+        <h2>Let's Play Tic Tac Toe!</h2>
+
+        <p class="error help-block" x-ng-show="userErrors[1].occurred">{{userErrors[1].message}}</p>
+        <p class="error help-block" x-ng-show="userErrors[2].occurred">{{userErrors[2].message}}</p>
+
+        <form name="userForm" ng-submit="addInput()" novalidate>
+
+            <p class="error help-block" x-ng-show="players.length < 2 && userErrors[0].occurred">{{userErrors[0].message}}</p>
+
+            <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && !userForm.name.$pristine }" x-ng-hide="players.length > 1">
+                <input type="text" class="form-control" placeholder="{{namePlaceholder}}" ng-model="playerName" required>
+                <button type="submit" class="btn btn-default" ng-disabled="userForm.$invalid">Submit</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="col-md-4">
+        <h3>{{players[1].name}}</h3>
+        <h3>{{players[1].wins}}</h3>
+    </div>
+</div> <!--End navbar!-->
+
+<div class="row">
+    <div class="col-md-4"></div>
+    <div class="col-md-4">
+        <div class="btn container">
+            <div x-ng-repeat="oneCell in boardArray">
+                <div class="allCellsAlways" x-ng-click="playerPicks(oneCell)" x-ng-class="{xclass: oneCell.status == 'X', oclass: oneCell.status == 'O'}"></div>
+            </div>
         </div>
+    </div>
+    <div class="col-md-4"></div>
+</div>
 
-        <div class="col-md-4">
-            <h2>Let's Play Tic Tac Toe!</h2>
-
-            <!--No longer working after firebase-->
-            <p class="error help-block" x-ng-show="errorMessages[1].occurred">{{errorMessages[1].message}}</p>
-            <p class="error help-block" x-ng-show="errorMessages[2].occurred">{{errorMessages[2].message}}</p>
-
-            <form name="userForm" ng-submit="addInput()" novalidate>
-
-            <p class="error help-block" x-ng-show="players.length < 2 && errorMessages[0].occurred">{{errorMessages[0].message}}</p>
-
-            	<div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && !userForm.name.$pristine }" x-ng-hide="players.length > 1">
-	                <input type="text" class="form-control" placeholder="{{namePlaceholder}}" ng-model="playerName" required>
-	                <button type="submit" class="btn btn-default" ng-disabled="userForm.$invalid">Submit</button>
-	            </div>
-	        </form>
-	      </div>
-
-	      <div class="col-md-4">
-             <!--No longer working after firebase-->
-	      	<h3>{{players[1].name}}</h3>
-	      	<h3>{{players[1].wins}}</h3>
-	      </div>
-    </div> <!--End navbar!-->
-
-	<div class="row">
-		<div class="col-md-4"></div>
-		<div class="col-md-4">
-			<div class="btn container">
-				<div x-ng-repeat="oneCell in cellList">
-					<div class="allCellsAlways" x-ng-click="playerPicks(oneCell)" x-ng-class="{xclass: oneCell.status == 'X', oclass: oneCell.status == 'O'}"></div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-4"></div>
-	</div>
-	
-	<div class="row">
-		<div class="col-md-4">CLICK COUNTER: {{movecounter}}</div>
-		<div class="col-md-4">
-			<div class="btn-container">
-				<button type="submit" class="btn btn-default btn-lg" ng-click="startNewGame()">New Game</button>
-				<button type="submit" class="btn btn-default btn-lg" ng-click="restartGame()">Restart</button>
-			</div>
-		</div>
-		<div class="col-md-4">{{testString}}</div>
-	</div>
+<div class="row">
+    <div class="col-md-4">CLICK COUNTER: {{moveCount}}</div>
+    <div class="col-md-4">
+        <div class="btn-container">
+            <button type="submit" class="btn btn-default btn-lg" ng-click="startNewGame()">New Game</button>
+            <button type="submit" class="btn btn-default btn-lg" ng-click="restartGame()">Restart</button>
+        </div>
+    </div>
+    <div class="col-md-4">{{testString}}</div>
+</div>
 </body>
 </html>
