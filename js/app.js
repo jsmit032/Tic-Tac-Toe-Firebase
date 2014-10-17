@@ -1,19 +1,22 @@
 var TTTApp = angular.module('TTTApp', ['firebase']);
 
-var scopeThing,
-    userErrors = [],
-    gameInProgress = true,
-    players = [],
-    namePlaceholders = ["name of player", "player 2 name"];
-
 TTTApp.controller('TTTController', function ($scope, $firebase) {
-  $scope.remoteGameContainer = $firebase(new Firebase("https://jen-tic-tac-toe.firebaseio.com/databaseGameContainer"));
-  scopeThing = $scope;
+  $scope.remoteGameContainer = $firebase(new Firebase("https://jen-tic-tac-toe.firebaseio.com"));
 
-  $scope.testString = "Angular source, App, and Controller present" ;
+    $scope.testString = "Angular source, App, and Controller present" ;
 
-  //List of user errors
-  userErrors = [
+    $scope.gameInProgress = true;
+
+    // List of players
+    $scope.players = [
+        {name: "", score: 0, wins: 0},
+        {name: "", score: 0, wins: 0}
+    ]; //end of players list
+
+    $scope.namePlaceholders = ["name of player", "player 2 name"];
+
+    //List of user errors
+    $scope.userErrors = [
       {
           name: 'Too Few Players',
           message: 'Name of two players is required!',
@@ -29,8 +32,9 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
           message: 'Game Over! Please start a new game.',
           occurred: false
       }
-  ]; //end of user error messages
+    ]; //end of user error messages
 
+    //$scope.remoteGameContainer.moveCount = 0;
     $scope.moveCount = 0;
 
   //  Create something to store the status of the cells:
@@ -48,7 +52,14 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     
     // This container object is what gets synced:
     // Doesn't contain anything other player doesn't need to see
-
+    $scope.gameContainer = {
+        board: $scope.boardArray,
+        gamePlay: $scope.gameInProgress,
+        Errors: $scope.userErrors,
+        moverCounter: $scope.moveCount,
+        playerID: $scope.players,
+        proxy: $scope.namePlaceholders
+    };
 
     //The bind statement creates a connection between anything in your app and the firebase connection we just created
 
@@ -64,15 +75,17 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     // array of player and function to insert player's name
     // from input field, limits to two players.
     // also assigns a score property to each player
-    $scope.namePlaceholder = namePlaceholders[0];
+    $scope.namePlaceholder = $scope.gameContainer.proxy[0];
 
     $scope.addInput = function() {
-        if(players.length >= 2) {
+        if($scope.gameContainer.playerID.length >= 2) {
             console.log("You've reached the player limit");
-            userErrors[0].occurred = false;
+            $scope.gameContainer.Errors[0].occurred = false;
         } else {
-            players.push({name: $scope.playerName, score: 0, wins: 0});
-            namePlaceholder = namePlaceholders[players.length & 1];
+            for (var i = 0; i < $scope.gameContainer.playerID.length; i++) {
+                $scope.gameContainer.playerID.push({name: $scope.playerName, score: 0, wins: 0});
+            };
+            $scope.namePlaceholder = $scope.namePlaceholder[$scope.gameContainer.playerID.length & 1];
             $scope.playerName = "";
         }
     }; // end of add Input function
@@ -80,33 +93,33 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
   // Clears the score and move count,
   // erases the board, and makes it X's turn
   $scope.startNewGame = function () {
-      $scope.moveCounter = 0;
-      gameInProgress = true;
-      userErrors[2].occurred = false;
-      for (var i = 0; i < $scope.boardArray.length; i++) {
-          $scope.boardArray[i].status = "null";
-          $scope.boardArray[i].clickNumber = 0;
+      $scope.gameContainer.moverCounter = 0;
+      $scope.gameContainer.gamePlay = true;
+      $scope.gameContainer.Errors[2].occurred = false;
+      for (var i = 0; i < $scope.gameContainer.board.length; i++) {
+          $scope.gameContainer.board[i].status = "null";
+          $scope.gameContainer.board[i].clickNumber = 0;
       } // clear board
-      for (var i = 0; i < players.length; i++) {
-          players[i].score = 0;
+      for (var i = 0; i < ($scope.gameContainer.playerID).length; i++) {
+          ($scope.gameContainer.playerID)[i].score = 0;
       }
 
      // Testing to console
       console.log("connected ");
-      console.log("move counter: " + $scope.moveCount);
-      console.log("status is: " + $scope.boardArray.status);
-      console.log("score is: " + players.score);
-      console.log("Game in Progress? " + gameInProgress);
+      console.log("move counter: " + $scope.gameContainer.moverCounter);
+      console.log("status is: " + $scope.gameContainer.board.status);
+      console.log("score is: " + ($scope.gameContainer.playerID).score);
+      console.log("Game in Progress? " + $scope.gameContainer.gamePlay);
   };
 
   // can this be inherited from the start New Game???
   $scope.restartGame = function () {
-      gameInProgress = true;
-      userErrors[2].occurred = false;
-      $scope.moveCount = 0;
-      for (var i = 0; i < $scope.boardArray.length; i++) {
-          $scope.boardArray[i].status = "null";
-          $scope.boardArray[i].clickNumber = 0;
+      $scope.gameContainer.gamePlay = true;
+      $scope.gameContainer.Errors[2].occurred = false;
+      $scope.gameContainer.moverCounter = 0;
+      for (var i = 0; i < $scope.gameContainer.board.length; i++) {
+          $scope.gameContainer.board[i].status = "null";
+          $scope.gameContainer.board[i].clickNumber = 0;
       } // clear board
   };
 
@@ -131,9 +144,9 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     // error message displays to player as asking to click another
     // square instead of game over.
     $scope.gameOver = function() {
-        if (gameInProgress == false) {
-            userErrors[2].occurred = true;
-            userErrors[1].occurred = false;
+        if ($scope.gameContainer.gamePlay == false) {
+            $scope.gameContainer.Errors[2].occurred = true;
+            $scope.gameContainer.Errors[1].occurred = false;
         }
     };
 
@@ -142,49 +155,59 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
   // won't allow a cell to change if clicked on more than once
 
   $scope.playerPicks = function(thisCell) {
-    if (players.length != 2) {
-        userErrors[0].occurred = true;
-    } else { 
-      var turn = players[$scope.moveCount % 2];
+    if (($scope.gameContainer.playerID).length != 2) {
+        // Shows Error if not Enough players are entered in game
+        $scope.gameContainer.Errors[0].occurred = true;
+    } else {
+        // if cell already clicked and gamePlay is true, Error Already Clicked occurs
 
-      if ( thisCell.clickNumber == 1 ) {
-        userErrors[1].occurred = true;
-      } else if (thisCell.clickNumber == 0 && gameInProgress == false) {
-          //  keeps an ended game from allowing gameContainer.playerID to click on cells
-      } else { //If cell not already clicked, runs else statement
-          $scope.moveCount++; //tracks moves to determine turn
-          console.log('Cell was: ' + thisCell.status);
+      if ( thisCell.clickNumber == 1 && $scope.gameContainer.gamePlay ) {
+          $scope.gameContainer.Errors[1].occurred = true;
+      } else {
+          var turn = $scope.gameContainer.playerID[$scope.gameContainer.moverCounter % 2];
 
-          thisCell.clickNumber++;
-          if (($scope.moveCount % 2) == 1) {
-              thisCell.status = "X";
-              userErrors[1].occurred = false;
+          // if clicked cell equals 0 and game not in progress then gameOver() occurs
+          //user Error already clicked also is set to false, since game is Over
+          if ((thisCell.clickNumber == 0 || 1) && !$scope.gameContainer.gamePlay) {
+              $scope.gameOver();
+              console.log("GAME OVER: " + $scope.gameContainer.Errors[1].name + " occurred ?: " + $scope.gameContainer.Errors[1].occurred);
           } else {
-              thisCell.status = "O";
-              userErrors[1].occurred = false;
-          }
+              // else if clickNumber doesn't equal 0 and game is in progress
+              //then players can select squares until there's
+              // a winner of cat game
+              $scope.gameContainer.moverCounter++;
+              console.log('Cell was: ' + thisCell.status);
 
-          turn.score += thisCell.value;
-          alert("turn: " + turn.name);
+              thisCell.clickNumber++;
+              if (($scope.gameContainer.moverCounter % 2) == 1) {
+                  thisCell.status = "X";
+                  $scope.gameContainer.Errors[1].occurred = false;
+              } else {
+                  thisCell.status = "O";
+                  $scope.gameContainer.Errors[1].occurred = false;
+              }
 
-          if ($scope.win(turn.score)) {
-              turn.wins++;
-              gameInProgress = false;
-              $scope.gameOver();
-              alert(turn.name + " wins!\nwins: " + turn.wins);
-          } else if ($scope.moveCount == 9) {
-              alert("Cat Game!");
-              gameInProgress = false;
-              $scope.gameOver();
-          }
+              turn.score += thisCell.value;
+              alert("turn: " + turn.name);
 
-          //Testing to console, upon clicks to cells
-          console.log("Cell is now: " + thisCell.status);
-          console.log("Click Number: " + thisCell.clickNumber);
-          console.log("name: " + turn.name + "Score: " + turn.score);
-          console.log("Game in Progress? " + gameInProgress);
-        }
-      }
+              if ($scope.win(turn.score)) {
+                  turn.wins++;
+                  $scope.gameContainer.gamePlay = false;
+                  $scope.gameOver();
+                  alert(turn.name + " wins!\nwins: " + turn.wins);
+              } else if ($scope.gameContainer.moverCounter == 9) {
+                  alert("Cat Game!");
+                  $scope.gameContainer.gamePlay = false;
+                  $scope.gameOver();
+              }
+              //Testing to console, upon clicks to cells
+              console.log("Cell is now: " + thisCell.status);
+              console.log("Click Number: " + thisCell.clickNumber);
+              console.log("name: " + turn.name + "Score: " + turn.score);
+              console.log("Game in Progress? " + $scope.gameContainer.gamePlay);
+          } //end else statement if clickNumber != 0 or 1 and game isn't in progress
+        } // end else statement for game in progress
+      } // end else statement testing for number of players
   }; // end of playerPicks()
 
 }); //end of TTTApp module
