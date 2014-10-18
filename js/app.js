@@ -1,10 +1,12 @@
 var TTTApp = angular.module('TTTApp', ['firebase']);
+var FB;
 
 TTTApp.controller('TTTController', function ($scope, $firebase) {
-    $scope.remoteGameContainer = $firebase(new Firebase("https://jen-tic-tac-toe.firebaseio.com"));
+    var ticTacRef = new Firebase("https://jen-tic-tac-toe.firebaseio.com");
+    $scope.remoteGameContainer = $firebase(ticTacRef);
+    FB = ($scope.remoteGameContainer);
 
-    $scope.testString = "Angular source, App, and Controller present" ;
-
+    // Variables and objects:
     $scope.gameInProgress = true;
 
     // List of players
@@ -47,6 +49,10 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
         {status: "null", clickNumber: 0, value: 256}
     ];// end of cell storage
 
+    // This goes through firebase, not angularfire
+    // It snags the current contents of everything in firebase
+    ticTacRef.once("value", function (data) {
+        console.log(data.val());
     // This container object is what gets synced:
     // Doesn't contain anything other player doesn't need to see
     $scope.gameContainer = {
@@ -60,7 +66,9 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
 
     //The bind statement creates a connection between anything in your app and the firebase connection we just created
 
-    $scope.remoteGameContainer.$bind($scope, "gameContainer");
+        $scope.remoteGameContainer.$bind($scope, "gameContainer");
+
+    }); // end of firebase data referencing
 
     // the watch statement tells Angular to refresh the interface of elements, ie ng-class,
     // whenever the model, in this case the Board, changes
@@ -208,5 +216,4 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
             } // end else statement for game in progress
         } // end else statement testing for number of players
     }; // end of playerPicks()
-
 }); //end of TTTApp module
