@@ -30,6 +30,11 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
             name: 'Game Over',
             message: 'Game Over! Please start a new game.',
             occurred: false
+        },
+        {
+            name: 'Not your turn',
+            message: 'Please wait for other player to make their move',
+            occurred: false
         }
     ]; //end of user error messages
 
@@ -53,6 +58,14 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     // It snags the current contents of everything in firebase
     ticTacRef.once("value", function (data) {
         console.log(data.val());
+    // Determine how many players are in the game
+        console.log($scope.currentPlayer);
+        // If there are no players or we should be resetting to CurrentPlayer0
+    if (!data.val() || data.val().numPlayers == 2) {
+        $scope.currentPlayer = 0;
+    } else {
+        $scope.currentPlayer = 1;
+    }
     // This container object is what gets synced:
     // Doesn't contain anything other player doesn't need to see
     $scope.gameContainer = {
@@ -60,6 +73,7 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
         gamePlay: $scope.gameInProgress,
         Errors: $scope.userErrors,
         moverCounter: $scope.moveCount,
+        numPlayers: $scope.currentPlayer +1,
         playerID: $scope.players,
         proxy: $scope.namePlaceholders
     };
@@ -68,7 +82,6 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
 
         $scope.remoteGameContainer.$bind($scope, "gameContainer");
 
-    }); // end of firebase data referencing
 
     // the watch statement tells Angular to refresh the interface of elements, ie ng-class,
     // whenever the model, in this case the Board, changes
@@ -86,14 +99,13 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
         if ($scope.gameContainer.playerID == false) {
             $scope.gameContainer.playerID = new Array();
             $scope.gameContainer.playerID.push({name: $scope.playerName, score: 0, wins: 0});
-        } else if ($scope.gameContainer.playerID != false ) {
+        } else if ($scope.gameContainer.playerID != false) {
             $scope.gameContainer.playerID.push({name: $scope.playerName, score: 0, wins: 0});
             $scope.gameContainer.Errors[0].occurred = false;
         }
-
-        $scope.namePlaceholder = $scope.gameContainer.proxy[1];
-        $scope.playerName = "";
-        };// end of add Input function
+            $scope.namePlaceholder = $scope.gameContainer.proxy[1];
+            $scope.playerName = "";
+    };// end of add Input function
 
     // Clears the score and move count,
     // erases the board, and makes it X's turn
@@ -165,6 +177,10 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
         if (($scope.gameContainer.playerID).length != 2) {
             // Shows Error if not Enough players are entered in game
             $scope.gameContainer.Errors[0].occurred = true;
+        }
+
+        if ($scope.currentPlayer != $scope.gameContainer.moverCounter % 2) {
+            // Keeps either player from playing each other turn
         } else {
             // if cell already clicked and gamePlay is true, Error Already Clicked occurs
 
@@ -216,4 +232,5 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
             } // end else statement for game in progress
         } // end else statement testing for number of players
     }; // end of playerPicks()
+ }); // end of firebase data referencing
 }); //end of TTTApp module
