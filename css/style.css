@@ -1,66 +1,95 @@
 .navbar {
-	text-align: center;
-	background-color: black;
-	border-color: #404040;
-	min-height: 100px;
+    text-align: center;
+    background-color: black;
+    border-color: #404040;
+    min-height: 100px;
+}
+
+.navbar .form-group {
+    display: inline-flex;
+}
+
+.btn {
+    padding: 6px 10px;
+    padding-right: 20px;
+    margin: 0 5px;
+}
+
+.play-container {
+    height: 100px;
+    width: 200px;
+    margin: 0 auto;
+    margin-bottom: 5px;
+    margin-top: 10px;
+}
+
+.turn {
+    background-color: #7F5959;
+    border: 2px solid #404040;
+    text-align: center;
+}
+
+.playerX {
+    background-image: url('../images/red_X.png');
+    background-repeat: no-repeat;
+    background-size: 90px 90px;
+    width: 100px;
+    height: 100px;
 }
 
 h2 {
-	color: #7F7F7F;
+    color: #7F7F7F;
 }
 
 .error {
-	color: red;
-	z-index: 1;
-}
-
-.form-group {
-	display: -moz-inline-box;
+    color: red;
+    z-index: 1;
 }
 
 h3 {
-	color: #BFBDBC;
+    color: #E5E5E5;
+    text-shadow: 0px 1px #7F7F7F;
 }
 /*For the board*/
 .container {
-	width: 475px;
-	height: 475px;
-	display: block;
-	margin: 0 auto;
-	padding: 0;
+    width: 475px;
+    height: 475px;
+    display: block;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .allCellsAlways {
-	width:150px; 
-	height:150px;
-	display: inline-block;
-	float: left;
-	text-align: center;
-	margin: 0 auto; 
-	padding: 0px;
-	border-radius: 10px;
-	-moz-box-shadow: 10px 10px 5px 0px #888;
-	-webkit-box-shadow: 10px 10px 5px 0px #888;
-	box-shadow: 10px 10px 5px 0px #888;
+    width:150px;
+    height:150px;
+    display: inline-block;
+    float: left;
+    text-align: center;
+    margin: 0 auto;
+    padding: 0px;
+    border-radius: 10px;
+    -moz-box-shadow: 10px 10px 5px 0px #888;
+    -webkit-box-shadow: 10px 10px 5px 0px #888;
+    box-shadow: 10px 10px 5px 0px #888;
 }
 
 .xclass {
-	background-image: url('../images/red_X.png');
-	background-size: 150px 150px;
+    background-image: url('../images/red_X.png');
+    background-size: 150px 150px;
 }
 
 .oclass {
-	background-image: url('../images/red_O.png');
-	background-size: 150px 150px;
+    background-image: url('../images/red_O.png');
+    background-size: 150px 150px;
 }
 
 .btn-container {
-	width: 220px;
-	height: 50px;
-	margin: 0 auto;
-	padding: 0;
+    width: 220px;
+    height: 50px;
+    margin: 0 auto;
+    padding: 0;
 }
 
 .btn-lg {
-	margin: 0 auto;
+    margin: 0 auto;
 }

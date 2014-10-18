@@ -19,8 +19,12 @@
 
 <div class="row navbar">
     <div class="col-md-4">
-        <h3>{{gameContainer.playerID[0].name}}</h3>
-        <h3>{{gameContainer.playerID[0].wins}}</h3>
+        <div class="play-container" x-ng-class="{turn:( gameContainer.moverCounter % 2 ) == 0}"
+             x-ng-hide="gameContainer.playerID.length < 1 || gameContainer.playerID == false">
+            <div class="playerX"></div>
+            <h3>{{gameContainer.playerID[0].name}}</h3>
+            <h3>{{gameContainer.playerID[0].wins}}</h3>
+        </div>
     </div>
 
     <div class="col-md-4">
@@ -43,8 +47,11 @@
     </div>
 
     <div class="col-md-4">
-        <h3>{{gameContainer.playerID[1].name}}</h3>
-        <h3>{{gameContainer.playerID[1].wins}}</h3>
+        <div class="play-container" x-ng-class="{turn:( gameContainer.moverCounter % 2 ) == 1}"
+             x-ng-hide="gameContainer.playerID.length < 2 || gameContainer.playerID == false">
+            <h3>{{gameContainer.playerID[1].name}}</h3>
+            <h3>{{gameContainer.playerID[1].wins}}</h3>
+        </div>
     </div>
 </div> <!--End navbar!-->
 
