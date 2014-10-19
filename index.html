@@ -19,11 +19,12 @@
 
 <div class="row navbar">
     <div class="col-md-4">
-        <div class="play-container" x-ng-class="{turn:( gameContainer.moverCounter % 2 ) == 0}"
-             x-ng-hide="gameContainer.playerID.length < 1 || gameContainer.playerID == false">
-            <div class="playerX"></div>
-            <h3>{{gameContainer.playerID[0].name}}</h3>
-            <h3>{{gameContainer.playerID[0].wins}}</h3>
+        <div class="play-container" x-ng-hide="gameContainer.playerID.length < 1 || gameContainer.playerID == false">
+            <div class="playerX ng-cloak" x-ng-hide="gameContainer.playerID.length < 1" ng-cloak></div>
+            <div class="player-info" x-ng-class="{turn:( gameContainer.moverCounter % 2 ) == 0}">
+                <h3>{{gameContainer.playerID[0].name}}</h3>
+                <h3>{{gameContainer.playerID[0].wins}}</h3>
+            </div>
         </div>
     </div>
 
@@ -39,7 +40,8 @@
             (gameContainer.playerID.length < 2 || gameContainer.playerID == false)">
                 {{gameContainer.Errors[0].message}}</p>
 
-            <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && !userForm.name.$pristine }" x-ng-hide="gameContainer.playerID.length > 1">
+            <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && !userForm.name.$pristine }"
+                 x-ng-hide="gameContainer.playerID.length > 1 ">
                 <input type="text" class="form-control" placeholder="{{namePlaceholder}}" ng-model="playerName" required>
                 <button type="submit" class="btn btn-default" ng-disabled="userForm.$invalid">Submit</button>
             </div>
@@ -47,10 +49,12 @@
     </div>
 
     <div class="col-md-4">
-        <div class="play-container" x-ng-class="{turn:( gameContainer.moverCounter % 2 ) == 1}"
-             x-ng-hide="gameContainer.playerID.length < 2 || gameContainer.playerID == false">
-            <h3>{{gameContainer.playerID[1].name}}</h3>
-            <h3>{{gameContainer.playerID[1].wins}}</h3>
+        <div class="play-container" x-ng-hide="gameContainer.playerID.length < 2 || gameContainer.playerID == false">
+            <div class="playerO ng-cloak"" x-ng-hide="gameContainer.playerID.length < 2" ng-cloak></div>
+            <div class="player-info" x-ng-class="{turn:( gameContainer.moverCounter % 2 ) == 1}">
+                <h3>{{gameContainer.playerID[1].name}}</h3>
+                <h3>{{gameContainer.playerID[1].wins}}</h3>
+            </div>
         </div>
     </div>
 </div> <!--End navbar!-->

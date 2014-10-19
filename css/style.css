@@ -17,20 +17,36 @@
 
 .play-container {
     height: 100px;
-    width: 200px;
+    width: 300px;
     margin: 0 auto;
     margin-bottom: 5px;
     margin-top: 10px;
 }
 
+.player-info {
+    display: inline-block;
+    width: 95px;
+    position: absolute;
+}
+
 .turn {
-    background-color: #7F5959;
+    background-color: #7F7F7F;
     border: 2px solid #404040;
     text-align: center;
 }
 
 .playerX {
+    display: inline-block;
     background-image: url('../images/red_X.png');
+    background-repeat: no-repeat;
+    background-size: 90px 90px;
+    width: 100px;
+    height: 100px;
+}
+
+.playerO {
+    display: inline-block;
+    background-image: url('../images/red_O.png');
     background-repeat: no-repeat;
     background-size: 90px 90px;
     width: 100px;

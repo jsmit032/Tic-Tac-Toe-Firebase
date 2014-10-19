@@ -96,15 +96,15 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     $scope.namePlaceholder = $scope.gameContainer.proxy[0];
 
     $scope.addInput = function() {
-        if ($scope.gameContainer.playerID == false) {
+        if (($scope.gameContainer.playerID) == false ) {
             $scope.gameContainer.playerID = new Array();
             $scope.gameContainer.playerID.push({name: $scope.playerName, score: 0, wins: 0});
-        } else if ($scope.gameContainer.playerID != false) {
+        } else if ($scope.gameContainer.playerID != false ) {
             $scope.gameContainer.playerID.push({name: $scope.playerName, score: 0, wins: 0});
             $scope.gameContainer.Errors[0].occurred = false;
         }
-            $scope.namePlaceholder = $scope.gameContainer.proxy[1];
-            $scope.playerName = "";
+        $scope.namePlaceholder = $scope.gameContainer.proxy[1];
+        $scope.playerName = "";
     };// end of add Input function
 
     // Clears the score and move count,
