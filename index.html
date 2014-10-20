@@ -33,7 +33,7 @@
         <h2>Let's Play Tic Tac Toe!</h2>
 
         <p class="error help-block" x-ng-show="userErrors[1].occurred">{{userErrors[1].message}}</p>
-        <p class="error help-block" x-ng-show="userErrors[2].occurred">{{userErrors[2].message}}</p>
+        <p class="error help-block" x-ng-show="gameContainer.Errors[2].occurred">{{gameContainer.Errors[2].message}}</p>
         <p class="error help-block" x-ng-show="userErrors[3].occurred">{{userErrors[3].message}}</p>
 
         <form name="userForm" ng-submit="addInput()" x-ng-hide="playerBoard" novalidate>

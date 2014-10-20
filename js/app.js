@@ -119,7 +119,7 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
         $scope.gameContainer.moverCounter = 0;
         $scope.gameContainer.gamePlay = true;
         $scope.userErrors[1] = false;
-        $scope.userErrors[2].occurred = false;
+        $scope.gameContainer.Errors[2].occurred = false;
         for (var i = 0; i < $scope.gameContainer.board.length; i++) {
             $scope.gameContainer.board[i].status = "null";
             $scope.gameContainer.board[i].clickNumber = 0;
@@ -144,7 +144,7 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
         $scope.gameContainer.gamePlay = true;
         $scope.userErrors[0].occurred = false;
         $scope.userErrors[1] = false;
-        $scope.userErrors[2].occurred = false;
+        $scope.gameContainer.Errors[2].occurred = false;
         $scope.gameContainer.moverCounter = 0;
         for (var i = 0; i < $scope.gameContainer.board.length; i++) {
             $scope.gameContainer.board[i].status = "null";
@@ -174,7 +174,7 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     // square instead of game over.
     $scope.gameOver = function() {
         if ($scope.gameContainer.gamePlay == false) {
-            $scope.userErrors[2].occurred = true;
+            $scope.gameContainer.Errors[2].occurred = true;
             $scope.userErrors[1].occurred = false;
         }
     };
