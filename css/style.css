@@ -37,7 +37,8 @@
 
 .playerX {
     display: inline-block;
-    background-image: url('../images/red_X.png');
+    background-image: url("../images/red_X.png");
+    background-color: black;
     background-repeat: no-repeat;
     background-size: 90px 90px;
     width: 100px;
@@ -46,7 +47,8 @@
 
 .playerO {
     display: inline-block;
-    background-image: url('../images/red_O.png');
+    background-image: url("../images/red_O.png");
+    background-color: black;
     background-repeat: no-repeat;
     background-size: 90px 90px;
     width: 100px;

@@ -7,7 +7,10 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     FB = ($scope.remoteGameContainer);
 
     // Variables and objects:
-    $scope.gameInProgress = true;
+    $scope.gameInProgress = false;
+
+    // Identifies Player's Board
+    $scope.playerBoard = false;
 
     // List of players
     $scope.players = false;
@@ -74,8 +77,7 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
         Errors: $scope.userErrors,
         moverCounter: $scope.moveCount,
         numPlayers: $scope.currentPlayer +1,
-        playerID: $scope.players,
-        proxy: $scope.namePlaceholders
+        playerID: $scope.players
     };
 
     //The bind statement creates a connection between anything in your app and the firebase connection we just created
@@ -93,18 +95,22 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     // array of player and function to insert player's name
     // from input field, limits to two players.
     // also assigns a score property to each player
-    $scope.namePlaceholder = $scope.gameContainer.proxy[0];
 
     $scope.addInput = function() {
         if (($scope.gameContainer.playerID) == false ) {
             $scope.gameContainer.playerID = new Array();
             $scope.gameContainer.playerID.push({name: $scope.playerName, score: 0, wins: 0});
+            $scope.playerBoard = $scope.gameContainer.playerID[0].name;
         } else if ($scope.gameContainer.playerID != false ) {
             $scope.gameContainer.playerID.push({name: $scope.playerName, score: 0, wins: 0});
-            $scope.gameContainer.Errors[0].occurred = false;
+            $scope.playerBoard = $scope.gameContainer.playerID[1].name;
         }
-        $scope.namePlaceholder = $scope.gameContainer.proxy[1];
         $scope.playerName = "";
+        if ($scope.gameContainer.playerID.length == 2) {
+            $scope.gameContainer.gamePlay = true;
+        } else {
+            $scope.userErrors[0].occurred = true;
+        }
     };// end of add Input function
 
     // Clears the score and move count,
@@ -112,7 +118,8 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     $scope.startNewGame = function () {
         $scope.gameContainer.moverCounter = 0;
         $scope.gameContainer.gamePlay = true;
-        $scope.gameContainer.Errors[2].occurred = false;
+        $scope.userErrors[1] = false;
+        $scope.userErrors[2].occurred = false;
         for (var i = 0; i < $scope.gameContainer.board.length; i++) {
             $scope.gameContainer.board[i].status = "null";
             $scope.gameContainer.board[i].clickNumber = 0;
@@ -132,9 +139,12 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     // can this be inherited from the start New Game???
     $scope.restartGame = function () {
         $scope.namePlaceholder = $scope.gameContainer.proxy[0];
+        $scope.playerBoard = false;
         $scope.gameContainer.playerID = false;
         $scope.gameContainer.gamePlay = true;
-        $scope.gameContainer.Errors[2].occurred = false;
+        $scope.userErrors[0].occurred = false;
+        $scope.userErrors[1] = false;
+        $scope.userErrors[2].occurred = false;
         $scope.gameContainer.moverCounter = 0;
         for (var i = 0; i < $scope.gameContainer.board.length; i++) {
             $scope.gameContainer.board[i].status = "null";
@@ -164,8 +174,8 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     // square instead of game over.
     $scope.gameOver = function() {
         if ($scope.gameContainer.gamePlay == false) {
-            $scope.gameContainer.Errors[2].occurred = true;
-            $scope.gameContainer.Errors[1].occurred = false;
+            $scope.userErrors[2].occurred = true;
+            $scope.userErrors[1].occurred = false;
         }
     };
 
@@ -176,24 +186,25 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
     $scope.playerPicks = function(thisCell) {
         if (($scope.gameContainer.playerID).length != 2) {
             // Shows Error if not Enough players are entered in game
-            $scope.gameContainer.Errors[0].occurred = true;
+            $scope.userErrors[0].occurred = true;
         }
 
         if ($scope.currentPlayer != $scope.gameContainer.moverCounter % 2) {
             // Keeps either player from playing each other turn
+            $scope.userErrors[3].occurred = true;
         } else {
             // if cell already clicked and gamePlay is true, Error Already Clicked occurs
+            $scope.userErrors[3].occurred = false;
 
             if ( thisCell.clickNumber == 1 && $scope.gameContainer.gamePlay ) {
-                $scope.gameContainer.Errors[1].occurred = true;
+                $scope.userErrors[1].occurred = true;
             } else {
                 var turn = $scope.gameContainer.playerID[$scope.gameContainer.moverCounter % 2];
 
-                // if clicked cell equals 0 and game not in progress then gameOver() occurs
+                // if clicked cell equals 0 and game not in progress
                 //user Error already clicked also is set to false, since game is Over
                 if ((thisCell.clickNumber == 0 || 1) && !$scope.gameContainer.gamePlay) {
-                    $scope.gameOver();
-                    console.log("GAME OVER: " + $scope.gameContainer.Errors[1].name + " occurred ?: " + $scope.gameContainer.Errors[1].occurred);
+
                 } else {
                     // else if clickNumber doesn't equal 0 and game is in progress
                     //then players can select squares until there's
@@ -204,10 +215,10 @@ TTTApp.controller('TTTController', function ($scope, $firebase) {
                     thisCell.clickNumber++;
                     if (($scope.gameContainer.moverCounter % 2) == 1) {
                         thisCell.status = "X";
-                        $scope.gameContainer.Errors[1].occurred = false;
+                        $scope.userErrors[1].occurred = false;
                     } else {
                         thisCell.status = "O";
-                        $scope.gameContainer.Errors[1].occurred = false;
+                        $scope.userErrors[1].occurred = false;
                     }
 
                     turn.score += thisCell.value;

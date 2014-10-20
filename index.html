@@ -20,7 +20,7 @@
 <div class="row navbar">
     <div class="col-md-4">
         <div class="play-container" x-ng-hide="gameContainer.playerID.length < 1 || gameContainer.playerID == false">
-            <div class="playerX ng-cloak" x-ng-hide="gameContainer.playerID.length < 1" ng-cloak></div>
+            <div ng-class="{ playerX: (gameContainer.playerID.length) >= 1 }" x-ng-hide="gameContainer.playerID.length < 1"></div>
             <div class="player-info" x-ng-class="{turn:( gameContainer.moverCounter % 2 ) == 0}">
                 <h3>{{gameContainer.playerID[0].name}}</h3>
                 <h3>{{gameContainer.playerID[0].wins}}</h3>
@@ -28,29 +28,32 @@
         </div>
     </div>
 
-    <div class="col-md-4">
+    <div class="col-md-3">
+        <h2 x-ng-hide="!playerBoard">Hello {{playerBoard}}!</h2>
         <h2>Let's Play Tic Tac Toe!</h2>
 
-        <p class="error help-block" x-ng-show="gameContainer.Errors[1].occurred">{{gameContainer.Errors[1].message}}</p>
-        <p class="error help-block" x-ng-show="gameContainer.Errors[2].occurred">{{gameContainer.Errors[2].message}}</p>
+        <p class="error help-block" x-ng-show="userErrors[1].occurred">{{userErrors[1].message}}</p>
+        <p class="error help-block" x-ng-show="userErrors[2].occurred">{{userErrors[2].message}}</p>
+        <p class="error help-block" x-ng-show="userErrors[3].occurred">{{userErrors[3].message}}</p>
 
-        <form name="userForm" ng-submit="addInput()" novalidate>
+        <form name="userForm" ng-submit="addInput()" x-ng-hide="playerBoard" novalidate>
 
-            <p class="error help-block" x-ng-show="gameContainer.Errors[0].occurred &&
+            <p class="error help-block" x-ng-show="userErrors[0].occurred &&
             (gameContainer.playerID.length < 2 || gameContainer.playerID == false)">
-                {{gameContainer.Errors[0].message}}</p>
+                {{userErrors[0].message}}</p>
 
             <div class="form-group" ng-class="{ 'has-error' : userForm.name.$invalid && !userForm.name.$pristine }"
                  x-ng-hide="gameContainer.playerID.length > 1 ">
-                <input type="text" class="form-control" placeholder="{{namePlaceholder}}" ng-model="playerName" required>
+                <input type="text" class="form-control" placeholder="Please enter your name" ng-model="playerName" required>
                 <button type="submit" class="btn btn-default" ng-disabled="userForm.$invalid">Submit</button>
             </div>
         </form>
+
     </div>
 
     <div class="col-md-4">
         <div class="play-container" x-ng-hide="gameContainer.playerID.length < 2 || gameContainer.playerID == false">
-            <div class="playerO ng-cloak"" x-ng-hide="gameContainer.playerID.length < 2" ng-cloak></div>
+            <div x-ng-class="{playerO:( gameContainer.playerID.length ) == 2}" x-ng-hide="gameContainer.playerID.length < 2"></div>
             <div class="player-info" x-ng-class="{turn:( gameContainer.moverCounter % 2 ) == 1}">
                 <h3>{{gameContainer.playerID[1].name}}</h3>
                 <h3>{{gameContainer.playerID[1].wins}}</h3>
@@ -62,7 +65,7 @@
 <div class="row">
     <div class="col-md-4"></div>
     <div class="col-md-4">
-        <div class="btn container">
+        <div class="container">
             <div x-ng-repeat="oneCell in gameContainer.board">
                 <div class="allCellsAlways" x-ng-click="playerPicks(oneCell)" x-ng-class="{xclass: oneCell.status == 'X', oclass: oneCell.status == 'O'}"></div>
             </div>
@@ -72,7 +75,10 @@
 </div>
 
 <div class="row">
-    <div class="col-md-4">CLICK COUNTER: {{gameContainer.moverCounter}}</div>
+    <div class="col-md-4">
+        CLICK COUNTER: {{gameContainer.moverCounter}}<br>
+        NUM OF PLAYERS: {{gameContainer.numPlayers}}
+    </div>
     <div class="col-md-4">
         <div class="btn-container">
             <button type="submit" class="btn btn-default btn-lg" ng-click="startNewGame()">New Game</button>
